@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import 'tailwindcss';
+@import './base.css';
+
+html,
+body {
+  font-family: Urbanist;
+  font-optical-sizing: auto;
+}
+
+html {
+  scrollbar-width: 6px;
+}
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-600;
+}
+
+.grad {
+  @apply animate-text bg-gradient-to-r from-primary-100 via-primary-800 to-primary-100 bg-clip-text !text-transparent;
+}

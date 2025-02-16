@@ -1,0 +1,34 @@
+/* TAILWIND THEME */
+@theme {
+  /* --color-*: initial; */
+
+  /* --color-transparent: transparent; */
+  --color-primary-50: #f6f6f6;
+  --color-primary-100: #e7e7e7;
+  --color-primary-200: #d1d1d1;
+  --color-primary-300: #b0b0b0;
+  --color-primary-400: #888888;
+  --color-primary-500: #6d6d6d;
+  --color-primary-600: #5d5d5d;
+  --color-primary-700: #4f4f4f;
+  --color-primary-800: #454545;
+  --color-primary-900: #3d3d3d;
+  --color-primary-950: #000000;
+
+  --animate-text: text 5s ease infinite;
+  @keyframes text {
+    0%,
+    100% {
+      background-size: 200% 200%;
+      background-position: left center;
+    }
+    50% {
+      background-size: 200% 200%;
+      background-position: right center;
+    }
+  }
+}
+
+@utility animation-delay-* {
+  animation-delay: --value(integer) ms;
+}
