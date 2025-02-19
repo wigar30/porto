@@ -145,7 +145,7 @@ export const renderBackground = (canvas: HTMLCanvasElement) => {
   // current palette is edstablished durting animation
   const palette: RandomColor[] = []
 
-  const updatePalette = (t: number) => {
+  const updatePalette = () => {
     // Simply use the first palette for all colors
     for (let i = 0; i < 256; i++) {
       palette[i] = palettes[0][i]
@@ -176,9 +176,32 @@ export const renderBackground = (canvas: HTMLCanvasElement) => {
     }
   }
 
+  // Add scroll-based color generation
+  const getScrollBasedColors = () => {
+    const scrollPosition = window.scrollY
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+    const scrollProgress = (scrollPosition / maxScroll) * 100
+
+    // Base color changes from purple to blue based on scroll
+    return {
+      c1: { r: 61 + scrollProgress, g: 61 + scrollProgress, b: 61 + scrollProgress },
+      c2: { r: 79 + scrollProgress * 0.8, g: 79 + scrollProgress * 0.8, b: 79 + scrollProgress * 0.8 },
+      c3: { r: 93 + scrollProgress * 0.8, g: 93 + scrollProgress * 0.8, b: 93 + scrollProgress * 0.8 },
+      c4: { r: 136 - scrollProgress * 0.3, g: 136 - scrollProgress * 0.3, b: 136 - scrollProgress * 0.3 },
+      c5: { r: 209 - scrollProgress * 1.2, g: 209 - scrollProgress * 1.2, b: 209 - scrollProgress * 1.2 },
+    }
+  }
+
+  const makeSingleColorPalettes = () => {
+    const colors = getScrollBasedColors()
+
+    return makeFiveColorGradient(colors.c1, colors.c2, colors.c3, colors.c4, colors.c5)
+  }
+
   const tick = (time: number) => {
     moveHeightMaps(time)
-    updatePalette(0)
+    palettes[0] = makeSingleColorPalettes() // Update palette based on current scroll
+    updatePalette()
     updateImageData()
 
     c.putImageData(image, 0, 0)

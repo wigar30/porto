@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onUnmounted } from 'vue'
 import { renderBackground, works } from './utils'
 
 defineOptions({
@@ -8,7 +8,13 @@ defineOptions({
 
 const timeout = ref<number>()
 const isAnimated = ref<boolean>(false)
-const isFlash = ref<boolean>(false)
+
+const scrollProgress = ref(0)
+
+const handleScroll = () => {
+  const windowHeight = document.documentElement.scrollHeight - window.innerHeight
+  scrollProgress.value = (window.scrollY / windowHeight) * 100
+}
 
 onMounted(() => {
   const canvas = document.getElementById('canvas')! as HTMLCanvasElement
@@ -18,20 +24,13 @@ onMounted(() => {
   timeout.value = setTimeout(() => {
     isAnimated.value = true
   }, 200)
+
+  window.addEventListener('scroll', handleScroll)
 })
 
-/**
- * Handle Flash
- * remove flash after .5 s
- */
-const handleFlash = () => {
-  isFlash.value = true
-
-  if (timeout.value) clearTimeout(timeout.value)
-  timeout.value = setTimeout(() => {
-    isFlash.value = false
-  }, 600)
-}
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <template>
@@ -58,8 +57,8 @@ const handleFlash = () => {
         </div>
 
         <div class="w-full flex flex-col items-start space-y-6">
-          <div v-for="(item, index) in content.items" :key="index" class="w-full z-10 animate-wrap relative" @click="handleFlash">
-            <div class="w-full flex flex-none flex-col items-start space-y-2 bg-transparent rounded-lg cursor-pointer group/grad">
+          <div v-for="(item, index) in content.items" :key="index" class="w-full animate-wrap relative group/item">
+            <div class="w-full flex flex-none flex-col items-start space-y-2 bg-transparent rounded-lg cursor-pointer z-20 group/grad">
               <p class="text-primary-900 dark:text-primary-100 text-5xl leading-16 group-hover/grad:grad transition-all">{{ item.name }}</p>
               <div class="w-full flex justify-end space-x-2">
                 <p v-for="(tag, i) in item.tech" :key="i" class="w-fit text-primary-900 dark:text-primary-100 text-xs sm:text-sm font-normal after:content-['|'] after:ml-2 last:after:content-none">
@@ -67,7 +66,9 @@ const handleFlash = () => {
                 </p>
               </div>
             </div>
-            <!-- <p class="-balance pl-12 absolute translate-x-[50%] z-3 top-0">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae, cupiditate minima?</p> -->
+            <p class="pl-12 opacity-0 group-hover/item:opacity-100 absolute translate-x-[80%] group-hover/item:translate-x-[100%] top-6 transition ease-in-out delay-100">
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae, cupiditate minima?
+            </p>
           </div>
         </div>
       </div>
